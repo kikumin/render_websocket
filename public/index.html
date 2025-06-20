@@ -12,6 +12,20 @@
       height: 100vh;
     }
 
+    .stamps {
+      display: flex;
+      gap: 10px;
+      padding: 5px;
+      border-top: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+
+    .stamp {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -41,6 +55,11 @@
 
 <body>
   <div class="chat">
+    <div class="stamps">
+      <img src="https://emoji.slack-edge.com/T02Q9V1KS/partyparrot/0a41b6e528fa17a8.gif" class="stamp" />
+      <img src="https://emoji.slack-edge.com/T02Q9V1KS/yaycat/8e9df57c6fe5f05b.gif" class="stamp" />
+      <img src="https://emoji.slack-edge.com/T02Q9V1KS/thonkang/fc94d4c0e8b081dd.gif" class="stamp" />
+    </div>
     <ul class="messages"></ul>
     <form class="form">
       <input class="input" autocomplete="off" />
@@ -66,6 +85,13 @@
         input.value = ''
         input.focus()
       }
+
+      document.querySelectorAll('.stamp').forEach(img => {
+        img.addEventListener('click', () => {
+          const time = new Date().toLocaleTimeString()
+          ws.send(`${myName} (${time}): [STAMP] ${img.src}`)
+        })
+      })
 
       ws.onmessage = function (msg) {
         const response = msg.data
