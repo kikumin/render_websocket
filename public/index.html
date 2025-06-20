@@ -95,23 +95,40 @@
 
       ws.onmessage = function (msg) {
         const response = msg.data
-        // 6a7fdb38: yoge!!
-        const [id, text] = response.split(': ')
-
         const messageList = document.querySelector('.messages')
         const li = document.createElement('li')
-        li.textContent = response
-        document.createElement('img')
-        const img = document.createElement('img')
-        img.src = `https://api.dicebear.com/9.x/rings/svg?seed=${id}`
-        img.alt = 'Dice'
-        img.style.width = '20px'
-        img.style.height = '20px'
-        img.style.verticalAlign = 'middle'
-        li.prepend(img)
+
+        // スタンプかどうか判定
+        if (response.includes('[STAMP]')) {
+          const [info, imgUrl] = response.split('[STAMP] ')
+          const span = document.createElement('span')
+          span.textContent = info
+
+          const img = document.createElement('img')
+          img.src = imgUrl.trim()
+          img.alt = 'Stamp'
+          img.style.height = '40px'
+          img.style.verticalAlign = 'middle'
+
+          li.appendChild(span)
+          li.appendChild(img)
+        } else {
+          // 通常メッセージ
+          li.textContent = response
+
+          const senderId = response.split(':')[0]
+          const img = document.createElement('img')
+          img.src = `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(senderId)}`
+          img.alt = 'Avatar'
+          img.style.width = '20px'
+          img.style.height = '20px'
+          img.style.verticalAlign = 'middle'
+          li.prepend(img)
+        }
 
         messageList.appendChild(li)
       }
+
 
       ws.onerror = function (error) {
         console.error('WebSocket Error: ', error)
