@@ -50,7 +50,7 @@
 
   <script>
     function main() {
-      const myId = self.crypto.randomUUID().substr(0, 8)
+      const myName = prompt("あなたの名前を入力してください") || "名無し"
 
       const host = location.origin.replace(/^http/, 'ws')
       const ws = new WebSocket(host + '/ws')
@@ -61,7 +61,8 @@
         e.preventDefault()
         const input = document.querySelector('.input')
         const text = input.value
-        ws.send(myId + ': ' + text)
+        const time = new Date().toLocaleTimeString()
+        ws.send(`${myName} (${time}): ${text}`)
         input.value = ''
         input.focus()
       }
